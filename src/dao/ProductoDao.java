@@ -29,7 +29,9 @@ public class ProductoDao {
     }
     
     public void update(int index, Producto prod){
-        lista.add(index, prod);
+        lista.get(index).setNombre(prod.getNombre());
+        lista.get(index).setPrecio(prod.getPrecio());
+        lista.get(index).setCantidad(prod.getCantidad());
     }
     
     public void delete(int index){
