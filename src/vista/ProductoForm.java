@@ -181,9 +181,19 @@ public class ProductoForm extends javax.swing.JFrame {
 
         btndelete.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btndelete.setText("Delete");
+        btndelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndeleteActionPerformed(evt);
+            }
+        });
 
         btnupdate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnupdate.setText("Update");
+        btnupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnupdateActionPerformed(evt);
+            }
+        });
 
         btnsave.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnsave.setText("Save");
@@ -285,6 +295,33 @@ public class ProductoForm extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_tbdatosMouseClicked
+
+    private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(rootPane, fila);
+        if(fila>=0){
+            Producto p = new Producto();
+            p.setNombre(txtproducto.getText());
+            p.setPrecio(Double.parseDouble(txtprecio.getText()));
+            p.setCantidad(Integer.parseInt(txtcantidad.getText()));
+            dao.update(fila, p);
+            limpiar();
+            llenardatos();
+        }else{
+        JOptionPane.showMessageDialog(rootPane, "Seleccionar Fila");
+        }
+    }//GEN-LAST:event_btnupdateActionPerformed
+
+    private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
+        // TODO add your handling code here:
+        if(fila>=0){
+            dao.delete(fila);
+            limpiar();
+            llenardatos();
+        }else{
+        JOptionPane.showMessageDialog(rootPane, "Seleccionar Fila");
+        }
+    }//GEN-LAST:event_btndeleteActionPerformed
     @Override
     public Image getIconImage(){
         Image retValue = Toolkit.getDefaultToolkit().
