@@ -8,7 +8,10 @@ import dao.ProductoDao;
 import entity.Producto;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,6 +19,8 @@ import javax.swing.JOptionPane;
  */
 public class ProductoForm extends javax.swing.JFrame {
     private ProductoDao dao = new ProductoDao();
+    private DefaultTableModel model;
+    private int fila = -1;
     /**
      * Creates new form ProductoForm
      */
@@ -23,6 +28,7 @@ public class ProductoForm extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Caso Ventas");        
         this.setLocationRelativeTo(null);
+        llenardatos();
     }
 
     /**
@@ -122,27 +128,28 @@ public class ProductoForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "PRODUCTO", "PRECIO", "CANTIDAD"
+                "ITEM", "PRODUCTO", "PRECIO", "CANTIDAD"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+        ));
+        tbdatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbdatosMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tbdatos);
         if (tbdatos.getColumnModel().getColumnCount() > 0) {
-            tbdatos.getColumnModel().getColumn(0).setMinWidth(100);
-            tbdatos.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tbdatos.getColumnModel().getColumn(1).setMinWidth(70);
-            tbdatos.getColumnModel().getColumn(1).setPreferredWidth(70);
-            tbdatos.getColumnModel().getColumn(1).setMaxWidth(70);
+            tbdatos.getColumnModel().getColumn(0).setMinWidth(70);
+            tbdatos.getColumnModel().getColumn(0).setPreferredWidth(70);
+            tbdatos.getColumnModel().getColumn(0).setMaxWidth(70);
+            tbdatos.getColumnModel().getColumn(1).setMinWidth(200);
+            tbdatos.getColumnModel().getColumn(1).setPreferredWidth(200);
+            tbdatos.getColumnModel().getColumn(1).setMaxWidth(200);
             tbdatos.getColumnModel().getColumn(2).setMinWidth(70);
             tbdatos.getColumnModel().getColumn(2).setPreferredWidth(70);
             tbdatos.getColumnModel().getColumn(2).setMaxWidth(70);
+            tbdatos.getColumnModel().getColumn(3).setMinWidth(70);
+            tbdatos.getColumnModel().getColumn(3).setPreferredWidth(70);
+            tbdatos.getColumnModel().getColumn(3).setMaxWidth(70);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -259,6 +266,7 @@ public class ProductoForm extends javax.swing.JFrame {
             p.setPrecio(Double.parseDouble(txtprecio.getText()));
             p.setCantidad(Integer.parseInt(txtcantidad.getText()));
             dao.add(p);
+            llenardatos();
             limpiar();
             JOptionPane.showMessageDialog(rootPane, "Registro guardado correctamente");
         }else{
@@ -266,6 +274,17 @@ public class ProductoForm extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnsaveActionPerformed
+
+    private void tbdatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbdatosMouseClicked
+        // TODO add your handling code here:
+        fila =tbdatos.getSelectedRow();
+        if(fila>=0){
+                txtproducto.setText(""+tbdatos.getValueAt(fila, 1));
+                txtprecio.setText(""+tbdatos.getValueAt(fila, 2));
+                txtcantidad.setText(""+tbdatos.getValueAt(fila, 3));
+
+        }
+    }//GEN-LAST:event_tbdatosMouseClicked
     @Override
     public Image getIconImage(){
         Image retValue = Toolkit.getDefaultToolkit().
@@ -278,6 +297,28 @@ public class ProductoForm extends javax.swing.JFrame {
         txtcantidad.setText("");
         txtproducto.requestFocus();
     }
+    private void llenardatos(){
+     limpiar_Table();
+     List<Producto> lista = new ArrayList<>();
+     model = (DefaultTableModel)tbdatos.getModel();
+     lista = dao.getLista();
+     Object[] fila = new Object[4];
+     for(int j=0; j<lista.size(); j++){
+         fila[0] = j+1;
+         fila[1] = lista.get(j).getNombre();
+         fila[2] = lista.get(j).getPrecio();
+         fila[3] = lista.get(j).getCantidad();    
+         model.addRow(fila);
+     }
+     tbdatos.setModel(model);
+     
+    }
+     private void limpiar_Table(){
+        for (int i = 0; i < tbdatos.getRowCount(); i++) {
+            model.removeRow(i);
+            i-=1;
+        }
+     }
     /**
      * @param args the command line arguments
      */
